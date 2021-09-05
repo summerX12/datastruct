@@ -79,5 +79,7 @@ int main()
     else
         print_s(data);
 */
-    llist_destroy(handler);
+   llist_destroy(handler);
+
+    exit(0);
 }

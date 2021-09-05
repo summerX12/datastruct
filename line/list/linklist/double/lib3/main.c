@@ -54,22 +54,14 @@ int main()
         tmp.math = rand()%100;
         tmp.chinese = rand()%100;
 
-        ret = llist_insert(handler,&tmp,LLIST_BACKWARD);
+        ret = handler->insert(handler,&tmp,LLIST_BACKWARD);
         if(ret < 0)
             exit(1);
     }
     
-    llist_travel(handler,print_s);
+    handler->travel(handler,print_s);
     printf("\n");
  
-    int id = 3;
-    char *del_name = "std6";
-
-    ret = llist_delete(handler,del_name,name_cmp);
-    if(ret)
-        printf("llist_delete failed\n");
-
-    llist_travel(handler,print_s);
 
 /*    struct score_st *data;
    
@@ -79,5 +71,7 @@ int main()
     else
         print_s(data);
 */
-    llist_destroy(handler);
+   llist_destroy(handler);
+
+    exit(0);
 }

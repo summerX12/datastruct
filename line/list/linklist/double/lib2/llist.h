@@ -9,9 +9,9 @@ typedef int llist_cmp(const void *,const void *);
 
 struct llist_node_st
 {
-    void *data;
     struct llist_node_st *prev;
     struct llist_node_st *next;
+    char data[1];
 };
 
 typedef struct

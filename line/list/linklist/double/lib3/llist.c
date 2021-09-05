@@ -4,6 +4,11 @@
 
 #include "llist.h"
 
+int llist_insert(LLIST *,const void *data,int mode);
+void *llist_find(LLIST *,const void *key,llist_cmp *);
+int llist_delete(LLIST *,const void *key,llist_cmp *);
+int llist_fetch(LLIST *,const void *key,llist_cmp *,void *data);
+void llist_travel(LLIST *,llist_op *);
 
 LLIST *llist_create(int initsize)
 {
@@ -14,10 +19,15 @@ LLIST *llist_create(int initsize)
         return NULL;
 
     new->size = initsize;
-    new->head.data = NULL;
     new->head.prev = &new->head;
     new->head.next = &new->head;
 
+    new->insert = llist_insert;
+    new->find = llist_find;
+    new->delete = llist_delete;
+    new->fetch = llist_fetch;
+    new->travel = llist_travel;
+    
     return new;
 }
 
@@ -25,13 +35,10 @@ int llist_insert(LLIST *ptr,const void *data,int mode)
 {
     struct llist_node_st *newnode;
 
-    newnode = malloc(sizeof(*newnode));
+    newnode = malloc(sizeof(*newnode) + ptr->size);
     if(newnode == NULL)
         return -1;
 
-    newnode->data = malloc(ptr->size);
-    if(newnode->data == NULL)
-        return -2;
     memcpy(newnode->data,data,ptr->size);
 
     if(mode == LLIST_FORWARD)
@@ -66,9 +73,14 @@ static struct llist_node_st *find_(LLIST *ptr,const void *key,llist_cmp *cmp)
 
 void *llist_find(LLIST *ptr,const void *key,llist_cmp *cmp)
 {
-    return find_(ptr,key,cmp)->data;
-
+    struct llist_node_st *node;
+    
+    node = find_(ptr,key,cmp);
+    if(node == &ptr->head)
+        return NULL;
+    return node->data;
 }
+
 int llist_delete(LLIST *ptr,const void *key,llist_cmp *cmp)
 {
     struct llist_node_st *node;
@@ -78,7 +90,6 @@ int llist_delete(LLIST *ptr,const void *key,llist_cmp *cmp)
         return -1;
     node->prev->next = node->next;
     node->next->prev = node->prev;
-    free(node->data);
     free(node);
     return 0;
 }
@@ -94,7 +105,6 @@ int llist_fetch(LLIST *ptr,const void *key,llist_cmp *cmp,void *data)
     node->next->prev = node->prev;
     if(data != NULL)
         memcpy(data,node->data,ptr->size);
-    free(node->data);
     free(node);
     return 0;
 }
@@ -114,7 +124,6 @@ void llist_destroy(LLIST *ptr)
     for(cur = ptr->head.next; cur != &ptr->head; cur = next)
     {
         next = cur->next;
-        free(cur->data);
         free(cur);
     }
     free(ptr);
