@@ -1,0 +1,15 @@
+add.c		把一个32位数的高16位和低16位相加，unoin
+base_convert.c	进制转化
+change.c		二维数组的行列互换
+doublearr.c	用户输入二维数组的每个数，再显示出来
+factorial.c	计算阶乘，递归
+fibonacci.c	计算fibonacci数列，递归
+insert.c		插入排序
+max.c		找出二维数组的最大值及其坐标
+mul.c		矩阵相乘
+primer.c		找质数
+quicksort.c	快速排序
+shellsort.c	希尔排序
+sort1.c		冒泡
+sort2.c		选择
+sum.c		二维数组全部元素之和
